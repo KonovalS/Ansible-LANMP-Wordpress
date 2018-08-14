@@ -1,0 +1,16 @@
+# Task DDOS V 0.1
+# Install virtual machine and import ssh
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "4linux/debian9"
+  config.vm.hostname = "local"
+  config.vm.network "public_network", ip: "192.168.13.1"
+  config.vm.network "public_network", ip: "192.168.13.2"
+  config.ssh.insert_key = false
+  config.vm.provision "shell", inline: "apt-get update && apt-get install -y python-minimal"
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.verbose = "v"
+    ansible.playbook = "playb.yml"
+  end
+end
