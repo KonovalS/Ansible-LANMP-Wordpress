@@ -21,8 +21,13 @@
 #- apt_repository: repo='deb deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx' state=present filename='nginx' update_cache='yes'
 #- apt: name='nginx' state='present' update_cache='yes'
 
+# nginx
         repo: deb http://nginx.org/packages/debian/ stretch nginx
         repo: deb-src http://nginx.org/packages/debian/ stretch nginx
+# repo dotdeb
+        repo: deb http://dotdeb.mirror.iphh.net/ stable all
+        repo: deb-src http://dotdeb.mirror.iphh.net/ stable all
+        state: present
         state: present
 #        get_url:
 #          url: https://nginx.org/keys/nginx_signing.key
@@ -37,7 +42,14 @@
       shell: apt-get update
       become: yes
 
+# Install NGINX
     - name: Install NGINX
       apt:
         pkg: nginx
+      become: yes
+      
+# Install AMP???
+    - name: Install AMP
+      apt:
+        pkg: amp
       become: yes
