@@ -4,8 +4,8 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "4linux/debian9"
   config.vm.hostname = "local"
-# In Big machine  config.vm.provider :virtualbox do |v|
-# In Big machine    v.name = "NAMPJ"
+# In Big machine config.vm.provider :virtualbox do |v|
+# In Big machine___ не уверен, изменит ли это имя машины или нет   v.name = "NAMPJ"
 # In Big machine    v.memory = 2048
 # In Big machine    v.cpus = 2
   config.vm.network "private_network", ip: "192.168.13.1"
