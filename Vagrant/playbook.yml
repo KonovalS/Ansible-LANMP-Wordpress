@@ -1,7 +1,36 @@
 ---
 - hosts: all
   tasks:
-   - name: install MC
-     apt:
-       pkg: mc
-     become: yes
+# Test Install
+    - name: Install MC
+      apt:
+        pkg: mc
+      become: yes
+# Add Key!!! and repo
+    - name: add deb apt repository key
+      apt_key:
+          url: https://nginx.org/keys/nginx_signing.key
+          state: present
+      become: yes    
+
+    - apt_repository:
+        repo: deb http://nginx.org/packages/debian/ stretch nginx
+        repo: deb-src http://nginx.org/packages/debian/ stretch nginx
+        state: present
+#        get_url:
+#          url: https://nginx.org/keys/nginx_signing.key
+#          dest: /tmp
+#           shell: apt-key add /tmp/nginx_signing.key
+      become: yes
+# Или.....
+
+#а может и   file: https://nginx.org/keys/nginx_signing.key
+#            state: present
+    - name: apt update
+      shell: apt-get update
+      become: yes
+
+    - name: Install NGINX
+      apt:
+        pkg: nginx
+      become: yes
