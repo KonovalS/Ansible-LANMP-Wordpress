@@ -1,34 +1,33 @@
 ---
 - hosts: all
   tasks:
-# Test Install
+  # Test Install
     - name: Install MC
       apt:
-        pkg: mc
+        name: mc
       become: yes
 # Add Key!!! and repo
     - name: add deb apt repository key
       apt_key:
           url: https://nginx.org/keys/nginx_signing.key
+          url: https://www.dotdeb.org/dotdeb.gpg
           state: present
-      become: yes    
+      become: yes
 
     - apt_repository:
-    
-# Нужно проверить вот это вариант
-#  always try to use HTTPS. I'm not sure why the nginx folks don't provide it.
-#- apt_key: url=http://nginx.org/keys/nginx_signing.key state=present 
-#- apt_repository: repo='deb deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx' state=present filename='nginx' update_cache='yes'
-#- apt: name='nginx' state='present' update_cache='yes'
-
 # nginx
         repo: deb http://nginx.org/packages/debian/ stretch nginx
-        repo: deb-src http://nginx.org/packages/debian/ stretch nginx
-# repo dotdeb
-        repo: deb http://dotdeb.mirror.iphh.net/ stable all
-        repo: deb-src http://dotdeb.mirror.iphh.net/ stable all
         state: present
+        filename: nginx
+#        repo: deb-src http://nginx.org/packages/debian/ stretch nginx
+#         filename: nginx
+# repo dotdeb for LAMP
+        repo: deb http://dotdeb.mirror.iphh.net/ stretch all
         state: present
+        filename: lamp
+#        repo: deb-src http://dotdeb.mirror.iphh.net/ stable all
+#        filename: lamp
+        update_cache: yes
 #        get_url:
 #          url: https://nginx.org/keys/nginx_signing.key
 #          dest: /tmp
@@ -38,18 +37,48 @@
 
 #а может и   file: https://nginx.org/keys/nginx_signing.key
 #            state: present
-    - name: apt update
-      shell: apt-get update
-      become: yes
-
+# USE "UPDATE_CACHE"!!!!!!
+#    - name: apt update
+#      shell: apt-get update
+#     become: yes
 # Install NGINX
     - name: Install NGINX
       apt:
-        pkg: nginx
+        name: nginx
       become: yes
-      
-# Install AMP???
-    - name: Install AMP
+#_______________________________ 15.08  script Work___________________
+# Install Apache
+    - name: Install apache2
       apt:
-        pkg: lamp
+        name: apache2
       become: yes
+
+# Install PHP
+    - name: Install PHP
+      apt:
+         name: "{{ packages }}"
+      vars:
+        packages:
+           - php7.0
+           - php7.0-mysql
+      become: yes
+#_______________________________ 16.08 Work___________________
+# Install mysql
+#    - name: install mysql
+#      apt:
+#        name: "{{ Components }}"
+#        Components:
+#           - mysql-server
+#           - mysql-client
+#      service:
+#      name: mysql
+#      state: started
+#      mysql_user:
+#       name: squlya
+#      # password hello@123
+#       password: '*A7881F5BF3549F6BD4B75423845825987E3B518F'
+#       encrypted: yes
+#       priv: '*.*:ALL,GRANT'
+#       state: present
+#      become: yes
+#_______________________________ Нежно деажить. Ругается на структура(синтаксис)
