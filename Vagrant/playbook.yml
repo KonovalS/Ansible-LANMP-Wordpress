@@ -2,7 +2,7 @@
 - hosts: all
   tasks:
   # Test Install
-    - name: Install MC
+    - name: Install tools
       apt:
         name: "{{ testtool }}"
       vars:
