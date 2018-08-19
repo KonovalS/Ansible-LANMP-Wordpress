@@ -34,13 +34,14 @@
 #           shell: apt-key add /tmp/nginx_signing.key
       become: yes
 # Или.....
-
 #а может и   file: https://nginx.org/keys/nginx_signing.key
 #            state: present
 # USE "UPDATE_CACHE"!!!!!!
 #    - name: apt update
 #      shell: apt-get update
 #     become: yes
+# не сестил, да и нужно ли?
+
 # Install NGINX
     - name: Install NGINX
       apt:
@@ -62,23 +63,31 @@
            - php7.0
            - php7.0-mysql
       become: yes
+
 #_______________________________ 16.08 Work___________________
 # Install mysql
-#    - name: install mysql
-#      apt:
-#        name: "{{ Components }}"
-#        Components:
-#           - mysql-server
-#           - mysql-client
-#      service:
-#      name: mysql
-#      state: started
-#      mysql_user:
-#       name: squlya
-#      # password hello@123
-#       password: '*A7881F5BF3549F6BD4B75423845825987E3B518F'
-#       encrypted: yes
-#       priv: '*.*:ALL,GRANT'
-#       state: present
-#      become: yes
-#_______________________________ Нежно деажить. Ругается на структура(синтаксис)
+    - name: MySQL
+      apt:
+        name: "{{ pacages }}"
+      vars:
+          pacages:
+          - mysql-server
+          - mysql-client
+          - python-dev
+ #         - libmysqlclient-dev
+          - python-mysqldb
+
+    - name: started service
+      service:
+        name: mysql
+        state: started
+    - name: add user
+      mysql_user:
+        name: squlya
+        # password hello@123
+        password: '*A7881F5BF3549F6BD4B75423845825987E3B518F'
+        encrypted: yes
+        priv: '*.*:ALL,GRANT'
+        state: present
+      become: yes
+#_______________________________ Work___________________
