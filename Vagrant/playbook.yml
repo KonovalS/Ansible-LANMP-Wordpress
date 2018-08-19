@@ -80,7 +80,7 @@
           - python-dev
  #         - libmysqlclient-dev
           - python-mysqldb
-
+      become: yes
     - name: started service
       service:
         name: mysql
