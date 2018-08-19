@@ -38,26 +38,25 @@
 #          dest: /tmp
 #           shell: apt-key add /tmp/nginx_signing.key
       become: yes
-# Или.....
-#а может и   file: https://nginx.org/keys/nginx_signing.key
-#            state: present
-# USE "UPDATE_CACHE"!!!!!!
-#    - name: apt update
-#      shell: apt-get update
-#     become: yes
-# не сестил, да и нужно ли?
 
 # Install NGINX
     - name: Install NGINX
       apt:
         name: nginx
       become: yes
-#_______________________________ 15.08  script Work___________________
+#
 # Install Apache
     - name: Install apache2
       apt:
         name: apache2
       become: yes
+# config apache2
+#    - name: Config apache2
+#      Shell:
+#        sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.config
+#      Shell:
+#        echo NameVirtualHost *:8080 >> /etc/apache2/ports.config
+
 
 # Install PHP
     - name: Install PHP
@@ -69,7 +68,7 @@
            - php7.0-mysql
       become: yes
 
-#_______________________________ 16.08 Work___________________
+#
 # Install mysql
     - name: MySQL
       apt:
@@ -98,4 +97,6 @@
     - name: set param
       shell:
         echo "[mysqld] \n \n max_connections = 700" >> /etc/mysql/my.cnf
+      shell:
+        sed -i 's/memory_limit = 128/memory_limit = 256/g' /etc/php/7.0/apache2/php.ini
       become: yes
