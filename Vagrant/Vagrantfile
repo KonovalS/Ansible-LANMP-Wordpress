@@ -1,5 +1,5 @@
 # Task DDOS V 0.1
-# Install virtual machine and import ssh
+# Install virtual machine
 
 Vagrant.configure(2) do |config|
   config.vm.box = "4linux/debian9"
