@@ -4,7 +4,12 @@
   # Test Install
     - name: Install MC
       apt:
-        name: mc
+        name: "{{ testtool }}"
+      vars:
+          testtool:
+            - mc
+            - lynx
+#        name: mc
       become: yes
 # Add Key!!! and repo
     - name: add deb apt repository key
@@ -90,4 +95,7 @@
         priv: '*.*:ALL,GRANT'
         state: present
       become: yes
-#_______________________________ Work___________________
+    - name: set param
+      shell:
+        echo "[mysqld] \n \n max_connections = 700" >> /etc/mysql/my.cnf
+      become: yes
