@@ -1,0 +1,38 @@
+---
+# Step 3:
+# Config pkg
+#
+
+# Config mysql
+
+ - name: start service MySQL
+   server:
+     name: mysql
+     state: started
+
+- name: add sqlUser
+  mysql_user:
+    name: squlya
+    # pass: hello@123
+    password: '*A7881F5BF3549F6BD4B75423845825987E3B518F'
+    encrypted: yes
+    priv: '*.*:ALL,GRANT'
+    state: present
+
+ - name: set param sql
+   shell:
+     echo "[mysqld] \n \n max_connections = 700" >> /etc/mysql/my.cnf
+
+# Config PHP
+
+ - name: set param php
+   shell:
+     sed -i 's/memory_limit = 128/memory_limit = 256/g' /etc/php/7.0/apache2/php.ini
+
+# config apache
+
+ - name: set param apache
+   shell:
+     sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.config
+   shell:
+     echo NameVirtualHost *:8080 >> /etc/apache2/ports.config
