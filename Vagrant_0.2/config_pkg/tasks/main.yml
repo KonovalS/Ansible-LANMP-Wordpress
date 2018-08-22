@@ -5,34 +5,33 @@
 
 # Config mysql
 
- - name: start service MySQL
-   server:
+ - name: startsql
+   service:
      name: mysql
      state: started
 
-- name: add sqlUser
-  mysql_user:
-    name: squlya
-    # pass: hello@123
-    password: '*A7881F5BF3549F6BD4B75423845825987E3B518F'
-    encrypted: yes
-    priv: '*.*:ALL,GRANT'
-    state: present
+# Add user pass: hello@123
 
- - name: set param sql
+ - name: add sqlUser
+   mysql_user:
+     name: squlya
+     password: '*A7881F5BF3549F6BD4B75423845825987E3B518F'
+     encrypted: yes
+     priv: '*.*:ALL,GRANT'
+     state: present
+
+# Set param
+
+ - name: Set sql
    shell:
      echo "[mysqld] \n \n max_connections = 700" >> /etc/mysql/my.cnf
-
-# Config PHP
-
- - name: set param php
+# Set PHP
+ - name: Set php
    shell:
      sed -i 's/memory_limit = 128/memory_limit = 256/g' /etc/php/7.0/apache2/php.ini
-
-# config apache
-
- - name: set param apache
+# set apache
+ - name: set apache
    shell:
-     sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.config
+     sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
    shell:
-     echo NameVirtualHost *:8080 >> /etc/apache2/ports.config
+     echo NameVirtualHost *:8080 >> /etc/apache2/ports.conf
