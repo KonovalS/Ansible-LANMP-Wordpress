@@ -1,1 +1,38 @@
+---
+# stape 2:
+# Add Repo & install pkg
+ - name: Install Tool
+   apt:
+     name:
+       - mc
+       - lynx
+ - name: Add key
+   apt_key:
+     url: https://nginx.org/keys/nginx_signing.key
+     url: https://www.dotdeb.org/dotdeb.gpg
+ - name: add repo
+   apt_repository:
+     repo: deb http://nginx.org/packages/debian/ stretch nginx
+     repo: deb http://dotdeb.mirror.iphh.net/ stretch all
+     filename: WebTools
+     state: present
+     update_cache: yes
+#
+# Install PKG
+ - name: Install Pak
+   apt:
+     name: "{{ distro }}"
+   vars:
+     distro:
+       - nginx
+       - php
+       - php-mysql
+       - mysql-server
+       - mysql-client
+       - python-mysqldb
+     state: present
 
+ - name: Install Apache2
+   apt:
+     name: apache2
+     state: present
