@@ -1,19 +1,16 @@
 ---
+ - name: INSTALL
+   hosts: all
+   become: yes
+   become_method: sudo
 
-- hosts: all
-  become: yes
-  become_method: sudo
-  tasks:
-# Install Tools
-      - name: Install Tools
-        apt:
-          name: "{{ tools }}"
-        tools:
-          - mc
-          - lynx
-# Play exp book
-      - roles:
-         - install_pkg
+   roles:
+    - install_pkg
 
-#      - roles:
-#          - config_pkg
+ - name: CONFIG
+   hosts: all
+   become: yes
+   become_method: sudo
+
+   roles:
+    - config_pkg
