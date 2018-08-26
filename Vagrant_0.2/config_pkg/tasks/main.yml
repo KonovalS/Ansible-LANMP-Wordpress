@@ -20,8 +20,8 @@
      priv: '*.*:ALL,GRANT'
      state: present
 
-# Set param
-
+# Set param config
+# Set Mysql
  - name: Set sql
    shell:
      echo "[mysqld] \n \n max_connections = 700" >> /etc/mysql/my.cnf
@@ -35,3 +35,7 @@
      sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
    shell:
      echo NameVirtualHost *:8080 >> /etc/apache2/ports.conf
+# Set nginx
+ - name: Edit nginx.conf
+   shell:
+     sed -i '29i\        reset_timedout_connection on' /etc/nginx/nginx.conf
