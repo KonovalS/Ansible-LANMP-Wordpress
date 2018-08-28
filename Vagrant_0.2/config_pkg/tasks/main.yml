@@ -29,13 +29,14 @@
  - name: Set php
    shell:
      sed -i 's/memory_limit = 128/memory_limit = 256/g' /etc/php/7.0/apache2/php.ini
-# set apache
- - name: set apache
-   shell:
-     sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
- - name: set apache_2
-   shell:
-     echo NameVirtualHost *:8080 >> /etc/apache2/ports.conf
+# set apache config
+#  убрать коммент при первом прогоне. Иначе делает дуюди
+# - name: set apache
+#   shell:
+#     sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+# - name: set apache_2
+#   shell:
+#     echo NameVirtualHost *:8080 >> /etc/apache2/ports.conf
  - name: copy apache default
    template: src=000-default.conf.j2 dest=/etc/apache2/sites-available/000-default.cong
  - name: copy test1 apache
@@ -49,11 +50,11 @@
    service:
      name: apache2
      state: restarted
-# Set nginx
- - name: Edit nginx.conf
-#  требуте отладкию Строка вставляется, но служба не перезапускается ошибка в лошах
-   shell:
-     sed -i '29i\\treset_timedout_connection on;' /etc/nginx/nginx.conf
+# Set nginx config
+# - name: Edit nginx.conf
+#  убрать коммент при первом прогоне. Иначе делает дуюди
+#   shell:
+#     sed -i '29i\\treset_timedout_connection on;' /etc/nginx/nginx.conf
  - name: Copy nginx test
    template: src=test1.local.N.conf.j2 dest=/etc/nginx/sites-available/test1.local.N.conf
  - name: Copy nginx test2
@@ -62,3 +63,29 @@
    service:
      name: nginx
      state: restarted
+# Download and Install Joomla
+#  убрать коммент при первом прогоне. Иначе делает дуюди
+# - name: Download Joomla
+#   get_url:
+#     url: https://github.com/joomla/joomla-cms/releases/download/3.8.12/Joomla_3.8.12-Stable-Full_Package.zip
+#     dest: /tmp/
+# - name: Unarchive
+#   shell:
+#     unzip /tmp/Joomla_3.8.12-Stable-Full_Package.zip  -d /tmp/j
+# Copy joonla to site
+ - name: Unarchive tetst1
+   shell:
+     unzip /tmp/Joomla_3.8.12-Stable-Full_Package.zip  -d /var/www/test1.local
+ - name: Unarchive tetst2
+   shell:
+     unzip /tmp/Joomla_3.8.12-Stable-Full_Package.zip  -d /var/www/test2.local
+# - name: Copy joomla file to site1
+#   copy:
+#     src: /tmp/j
+#     dest: /var/www/test1.local
+#     remote_src: yes
+# - name: Copy joomla file to site2
+#   copy:
+#     src: /tmp/j
+#     dest: /var/www/test2.local
+#     remote_src: yes
