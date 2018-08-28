@@ -35,6 +35,20 @@
      sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
    shell:
      echo NameVirtualHost *:8080 >> /etc/apache2/ports.conf
+ - name: copy apache default
+   template: src=000-default.conf.j2 dest=/etc/apache2/sites-available/000-default.cong
+ - name: copy test1 apache
+   template: src=test1.local.j2 dest=/etc/apache2/sites-available/test1.local
+ - name: copy test2 apache
+   template: src=test2.local.j2 dest=/etc/apache2/sites-available/test2.local
+ - name: enebl site apache
+   shell:
+     a2ensite test1.local test2.local
+ - name: restart apache
+   service:
+     name: apache2
+     state: restarted
+
 # Set nginx
  - name: Edit nginx.conf
    shell:
