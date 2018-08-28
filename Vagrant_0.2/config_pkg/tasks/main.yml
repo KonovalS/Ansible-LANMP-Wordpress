@@ -38,9 +38,9 @@
  - name: copy apache default
    template: src=000-default.conf.j2 dest=/etc/apache2/sites-available/000-default.cong
  - name: copy test1 apache
-   template: src=test1.local.j2 dest=/etc/apache2/sites-available/test1.local
+   template: src=test1.local.conf.j2 dest=/etc/apache2/sites-available/test1.local.conf
  - name: copy test2 apache
-   template: src=test2.local.j2 dest=/etc/apache2/sites-available/test2.local
+   template: src=test2.local.conf.j2 dest=/etc/apache2/sites-available/test2.local.conf
  - name: enebl site apache
    shell:
      a2ensite test1.local test2.local
