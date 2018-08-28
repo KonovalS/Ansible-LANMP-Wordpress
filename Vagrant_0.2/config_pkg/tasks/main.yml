@@ -33,6 +33,7 @@
  - name: set apache
    shell:
      sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+ - name: set apache_2
    shell:
      echo NameVirtualHost *:8080 >> /etc/apache2/ports.conf
  - name: copy apache default
@@ -48,8 +49,16 @@
    service:
      name: apache2
      state: restarted
-
 # Set nginx
  - name: Edit nginx.conf
+#  требуте отладкию Строка вставляется, но служба не перезапускается ошибка в лошах
    shell:
-     sed -i '29i\        reset_timedout_connection on' /etc/nginx/nginx.conf
+     sed -i '29i\\treset_timedout_connection on;' /etc/nginx/nginx.conf
+ - name: Copy nginx test
+   template: src=test1.local.N.conf.j2 dest=/etc/nginx/sites-available/test1.local.N.conf
+ - name: Copy nginx test2
+   template: src=test2.local.N.conf.j2 dest=/etc/nginx/sites-available/test2.local.N.conf
+ - name: Nginx restarted
+   service:
+     name: nginx
+     state: restarted
