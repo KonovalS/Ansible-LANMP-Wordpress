@@ -1,0 +1,10 @@
+<VirtualHost *:8080>
+ ServerAdmin admin@test2.local
+ ServerName www.test2.local
+ ServerAlias test2.local
+
+ DocumentRoot /var/www/test2.local
+ ErrorLog ${APACHE_LOG_DIR}/test2.local-Error.log
+ CustomLog ${APACHE_LOG_DIR}/test2.local-access.log combined
+ Loglevel warn
+</VirtualHost>
