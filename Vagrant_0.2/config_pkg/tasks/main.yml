@@ -19,6 +19,28 @@
      encrypted: yes
      priv: '*.*:ALL,GRANT'
      state: present
+ - name: add test1
+   mysql_user:
+     name: usertest1
+     password: '*6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9'
+     encrypted: yes
+     priv: '*.*:ALL,GRANT'
+     state: present
+ - name: add test1
+   mysql_user:
+     name: usertest2
+     password: '*6BB4837EB74329105EE4568DDA7DC67ED2CA2AD9'
+     encrypted: yes
+     priv: '*.*:ALL,GRANT'
+     state: present
+ - name: Create DB_1
+   mysql_db:
+     name: test1
+     state: present
+ - name: Create DB_2
+   mysql_db:
+     name: test2
+     state: present
 
 # Set param config
 # Set Mysql
@@ -31,12 +53,22 @@
      sed -i 's/memory_limit = 128/memory_limit = 256/g' /etc/php/7.0/apache2/php.ini
 # set apache config
 #  убрать коммент при первом прогоне. Иначе делает дуюди
-# - name: set apache
-#   shell:
-#     sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
-# - name: set apache_2
-#   shell:
-#     echo NameVirtualHost *:8080 >> /etc/apache2/ports.conf
+ - name: set apache
+   shell:
+     sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
+ - name: set apache_2
+   shell:
+     echo NameVirtualHost *:8080 >> /etc/apache2/ports.conf
+#
+# Install and config mpm
+
+ - name: install apache2-mpm mod
+   apt:
+     name: libapache2-mpm-itk
+ - name: Add apache mod
+   shell: a2enmod mpm_itk
+
+#
  - name: copy apache default
    template: src=000-default.conf.j2 dest=/etc/apache2/sites-available/000-default.cong
  - name: copy test1 apache
@@ -46,46 +78,51 @@
  - name: enebl site apache
    shell:
      a2ensite test1.local test2.local
- - name: restart apache
+ - name: start apache
    service:
      name: apache2
-     state: restarted
+     state: started
 # Set nginx config
-# - name: Edit nginx.conf
+ - name: Edit nginx.conf
 #  убрать коммент при первом прогоне. Иначе делает дуюди
-#   shell:
-#     sed -i '29i\\treset_timedout_connection on;' /etc/nginx/nginx.conf
- - name: Copy nginx test
+   shell:
+     sed -i '29i\\treset_timedout_connection on;' /etc/nginx/nginx.conf
+ - name: Copy to avalile nginx test1
    template: src=test1.local.N.conf.j2 dest=/etc/nginx/sites-available/test1.local.N.conf
- - name: Copy nginx test2
+ - name: Copy to avalile nginx test2
    template: src=test2.local.N.conf.j2 dest=/etc/nginx/sites-available/test2.local.N.conf
+ - name: Create s-link nginx
+   shell: ln -s /etc/nginx/sites-available/t* /etc/nginx/sites-enabled/
  - name: Nginx restarted
    service:
      name: nginx
      state: restarted
-# Download and Install Joomla
-#  убрать коммент при первом прогоне. Иначе делает дуюди
-# - name: Download Joomla
-#   get_url:
-#     url: https://github.com/joomla/joomla-cms/releases/download/3.8.12/Joomla_3.8.12-Stable-Full_Package.zip
-#     dest: /tmp/
-# - name: Unarchive
-#   shell:
-#     unzip /tmp/Joomla_3.8.12-Stable-Full_Package.zip  -d /tmp/j
-# Copy joonla to site
- - name: Unarchive tetst1
-   shell:
-     unzip /tmp/Joomla_3.8.12-Stable-Full_Package.zip  -d /var/www/test1.local
- - name: Unarchive tetst2
-   shell:
-     unzip /tmp/Joomla_3.8.12-Stable-Full_Package.zip  -d /var/www/test2.local
-# - name: Copy joomla file to site1
-#   copy:
-#     src: /tmp/j
-#     dest: /var/www/test1.local
-#     remote_src: yes
-# - name: Copy joomla file to site2
-#   copy:
-#     src: /tmp/j
-#     dest: /var/www/test2.local
-#     remote_src: yes
+# Download and Install Wordpress
+#  убрать коммент при первом прогоне. Иначе делает дублти
+ - name: Download Wordpress
+   unarchive:
+     src: https://wordpress.org/latest.zip
+     dest: /tmp/
+     remote_src: yes
+
+ - name: Copy WP file to site1
+   shell: cp -r /tmp/wordpress/* /var/www/S1/test1.local/
+ - name: Copy WP file to site2
+   shell: cp -r /tmp/wordpress/* /var/www/S2/test2.local/
+# Copy config File
+ - name: Copy WP_1 Config file
+   template: src=wp-config.php.1.j2 dest=/var/www/S1/test1.local/wp-config.php
+ - name: Copy WP_2 config file
+   template: src=wp-config.php.2.j2 dest=/var/www/S2/test2.local/wp-config.php
+
+# Last restart web service
+ - name: Apache2 restart
+   service:
+     name: apache2
+     stare: restarted
+ - name: Nginx restart
+   service:
+     name: nginx
+     state: restarted
+
+...
