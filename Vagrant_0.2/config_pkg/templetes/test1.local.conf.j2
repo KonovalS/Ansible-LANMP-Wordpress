@@ -3,8 +3,14 @@
  ServerName www.test1.local
  ServerAlias test1.local
 
- DocumentRoot /var/www/test1.local
+ DocumentRoot /var/www/S1/test1.local
  ErrorLog ${APACHE_LOG_DIR}/test1.local-Error.log
  CustomLog ${APACHE_LOG_DIR}/test1.local-access.log combined
  Loglevel warn
+
+<IfModule mpm_itk_module>
+AssignUserId www-data test1
+</IfModule>
+
 </VirtualHost>
+
