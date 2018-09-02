@@ -24,15 +24,69 @@
      name: "{{ distro }}"
    vars:
      distro:
-       - nginx
+       - apache2
        - php
        - php-mysql
        - mysql-server
        - mysql-client
        - python-mysqldb
      state: present
+# nginx not friend Apache
 
- - name: Install Apache2
-   apt:
+ - name: stop Apache2 install nginx
+   service:
      name: apache2
+     state: stopped
+ - name: install
+   apt:
+     name: nginx
      state: present
+# Add User fot mpm_itk
+
+# Config mpm_itk
+# Add groupe
+ - name: add groupe site1
+   group:
+     name: test1
+     state: present
+ - name: add groupe site2
+   group:
+     name: test2
+     state: present
+
+# Add Users
+ - name: add user site1
+   user:
+     name: user1
+     group: test1
+     shell: /bin/false
+     home: /var/www/S1
+ - name: add user site2
+   user:
+     name: user2
+     group: test2
+     shell: /bin/false
+     home: /var/www/S2
+
+# mkdir
+ - name: Create dirictory
+   file:
+     path: /var/www/S1/test1.local
+     state: directory
+     owner: user1
+     group: test1
+     mode: 0755
+     recurse: yes
+ - name: Create dirictory
+   file:
+     path: /var/www/S2/test2.local
+     state: directory
+     owner: user2
+     group: test2
+     mode: 0755
+     recurse: yes
+
+# Edit hosts
+ - name: Edit Hosts file
+   shell:
+     echo "192.168.13.1     test1.local \n192.168.13.2      test2.local" >> /etc/hosts
