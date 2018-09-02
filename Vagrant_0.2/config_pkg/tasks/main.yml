@@ -119,7 +119,7 @@
  - name: Apache2 restart
    service:
      name: apache2
-     stare: restarted
+     state: restarted
  - name: Nginx restart
    service:
      name: nginx
