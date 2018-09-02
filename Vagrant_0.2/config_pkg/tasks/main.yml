@@ -10,7 +10,8 @@
      name: mysql
      state: started
 
-# Add user pass: hello@123
+# Add user and DB
+# pass: hello@123 for first
 
  - name: add sqlUser
    mysql_user:
@@ -52,7 +53,7 @@
    shell:
      sed -i 's/memory_limit = 128/memory_limit = 256/g' /etc/php/7.0/apache2/php.ini
 # set apache config
-#  убрать коммент при первом прогоне. Иначе делает дуюди
+# убрать коммент при первом прогоне. Иначе делает дуюди
  - name: set apache
    shell:
      sed -i 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
@@ -68,14 +69,14 @@
  - name: Add apache mod
    shell: a2enmod mpm_itk
 
-#
+# Copy apache site config
  - name: copy apache default
    template: src=000-default.conf.j2 dest=/etc/apache2/sites-available/000-default.cong
  - name: copy test1 apache
    template: src=test1.local.conf.j2 dest=/etc/apache2/sites-available/test1.local.conf
  - name: copy test2 apache
    template: src=test2.local.conf.j2 dest=/etc/apache2/sites-available/test2.local.conf
- - name: enebl site apache
+ - name: eneble site apache
    shell:
      a2ensite test1.local test2.local
  - name: start apache
@@ -98,7 +99,6 @@
      name: nginx
      state: restarted
 # Download and Install Wordpress
-#  убрать коммент при первом прогоне. Иначе делает дублти
  - name: Download Wordpress
    unarchive:
      src: https://wordpress.org/latest.zip
