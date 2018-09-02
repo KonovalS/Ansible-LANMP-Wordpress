@@ -1,6 +1,6 @@
 ---
 # stape 2:
-# Add Repo & install pkg
+# Add Repo & install tools pkg
  - name: Install Tool
    apt:
      name:
@@ -18,7 +18,7 @@
      state: present
      update_cache: yes
 #
-# Install PKG
+# Install pkg
  - name: Install Pak
    apt:
      name: "{{ distro }}"
@@ -31,9 +31,9 @@
        - mysql-client
        - python-mysqldb
      state: present
-# nginx not friend Apache
+# Nginx not friend Apache, port not chenge
 
- - name: stop Apache2 install nginx
+ - name: stop Apache2 to install nginx
    service:
      name: apache2
      state: stopped
@@ -41,9 +41,10 @@
    apt:
      name: nginx
      state: present
-# Add User fot mpm_itk
 
+# Add User for mpm_itk
 # Config mpm_itk
+
 # Add groupe
  - name: add groupe site1
    group:
