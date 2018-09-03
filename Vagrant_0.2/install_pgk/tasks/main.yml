@@ -76,6 +76,7 @@
      state: directory
      owner: user1
      group: test1
+# mb mode: 0750?
      mode: 0755
      recurse: yes
  - name: Create dirictory
@@ -84,6 +85,7 @@
      state: directory
      owner: user2
      group: test2
+# mb mode: 0750?
      mode: 0755
      recurse: yes
 
